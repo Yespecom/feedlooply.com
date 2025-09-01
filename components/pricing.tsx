@@ -9,8 +9,8 @@ export function Pricing() {
     <div className="mx-auto max-w-3xl text-center">
       <h2 className="text-balance text-2xl font-semibold md:text-3xl">Early Founder Lifetime Deal</h2>
       <p className="mt-3 text-muted-foreground">
-        ₹3,999 / $47.63 one-time. Lifetime access to Phase 1 features, founder community, and roadmap votes. 60-Day
-        Launch Guarantee — full refund if we don’t ship in 60 days.
+        ₹3,999 / $47.63 one-time. Lifetime access to Phase 1 features, founder community, and roadmap votes. 40-Day
+        Launch Guarantee — full refund if we don’t ship in 40 days.
       </p>
 
       <div className="mt-8 rounded-xl border p-6 md:p-8 lg:p-10 bg-gradient-to-br from-indigo-500/5 to-cyan-500/5 dark:from-indigo-400/10 dark:to-cyan-400/10">
