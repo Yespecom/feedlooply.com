@@ -68,7 +68,7 @@ export function Hero() {
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="w-full sm:w-auto h-9 px-3 text-xs md:h-11 md:px-6 md:text-base bg-indigo-600 hover:bg-indigo-700 text-white shadow transition-transform hover:scale-[1.02]">
-                    Get Lifetime Deal — ₹3,999 / $49
+                    Get Lifetime Deal — ₹3,999 / $47.63
                   </Button>
                 </DialogTrigger>
                 <PaymentModal />
