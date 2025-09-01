@@ -4,7 +4,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 
 const faqs = [
   {
-    q: "What if Feedlooply doesn’t launch in 60 days?",
+    q: "What if Feedlooply doesn’t launch in 40 days?",
     a: "Full refund. Email hello@feedlooply.com with your transaction id; processed within 7 business days.",
   },
   {
