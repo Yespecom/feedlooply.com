@@ -94,7 +94,7 @@ export function Hero() {
               aria-label="Trust badges"
             >
               <span className="text-xs text-muted-foreground">Secure checkout via Razorpay</span>
-              <span className="text-xs text-muted-foreground">60-Day Launch Guarantee</span>
+              <span className="text-xs text-muted-foreground">40-Day Launch Guarantee</span>
             </motion.div>
           </div>
 
