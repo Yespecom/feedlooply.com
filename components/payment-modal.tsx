@@ -208,7 +208,7 @@ export function PaymentModal() {
           <DialogHeader>
             <DialogTitle>Join Early Access</DialogTitle>
             <DialogDescription>
-              Create your account to reserve lifetime access. Your payment is protected by our 60-day launch guarantee.
+              Create your account to reserve lifetime access. Your payment is protected by our 40-day launch guarantee.
             </DialogDescription>
           </DialogHeader>
 
