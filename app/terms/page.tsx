@@ -15,16 +15,16 @@ export default function TermsPage() {
       </section>
 
       <section className="mt-8 space-y-4 text-muted-foreground leading-relaxed text-pretty">
-        <h2 className="text-xl font-medium text-foreground">2. 60-Day Launch Guarantee</h2>
-        <p>We guarantee to ship the Phase 1 version within 60 days of your purchase.</p>
-        <p>If Feedlooply fails to launch Phase 1 within 60 days, you are eligible for a full refund.</p>
+        <h2 className="text-xl font-medium text-foreground">2. 40-Day Launch Guarantee</h2>
+        <p>We guarantee to ship the Phase 1 version within 40 days of your purchase.</p>
+        <p>If Feedlooply fails to launch Phase 1 within 40 days, you are eligible for a full refund.</p>
       </section>
 
       <section className="mt-8 space-y-4 text-muted-foreground leading-relaxed text-pretty">
         <h2 className="text-xl font-medium text-foreground">3. Refund Policy</h2>
         <ul className="list-disc space-y-2 pl-5">
           <li>
-            <span className="font-medium text-foreground">Full Refund:</span> If Phase 1 is not launched within 60 days,
+            <span className="font-medium text-foreground">Full Refund:</span> If Phase 1 is not launched within 40 days,
             we will refund 100% of your payment.
           </li>
           <li>
