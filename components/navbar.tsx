@@ -1,8 +1,47 @@
 "use client"
 
+import type React from "react"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { SubscribeButton } from "./subscribe-button"
+import { usePathname } from "next/navigation"
+
+type NavHashLinkProps = {
+  id: string
+  className?: string
+  children: React.ReactNode
+}
+
+function NavHashLink({ id, className, children }: NavHashLinkProps) {
+  const pathname = usePathname()
+
+  if (pathname === "/") {
+    // Already on homepage: smooth-scroll without full navigation
+    return (
+      <a
+        href={`/#${id}`}
+        className={className}
+        onClick={(e) => {
+          e.preventDefault()
+          const el = document.getElementById(id)
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
+        }}
+      >
+        {children}
+      </a>
+    )
+  }
+
+  // On another page (e.g., blog): navigate to home then scroll
+  return (
+    <Link href={{ pathname: "/", hash: id }} className={className}>
+      {children}
+    </Link>
+  )
+}
 
 export function Navbar() {
   return (
@@ -14,15 +53,15 @@ export function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-6 md:flex">
-          <a href="#features" className="text-sm text-muted-foreground hover:text-foreground">
+          <NavHashLink id="features" className="text-sm text-muted-foreground hover:text-foreground">
             Features
-          </a>
-          <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground">
+          </NavHashLink>
+          <NavHashLink id="pricing" className="text-sm text-muted-foreground hover:text-foreground">
             Pricing
-          </a>
-          <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground">
+          </NavHashLink>
+          <NavHashLink id="faq" className="text-sm text-muted-foreground hover:text-foreground">
             FAQ
-          </a>
+          </NavHashLink>
           {/* Blogs link */}
           <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground">
             Blogs
@@ -35,14 +74,38 @@ export function Navbar() {
           </div>
           {/* mobile buttons */}
           <Button asChild className="md:hidden bg-transparent" variant="outline">
-            <a href="/blog" aria-label="Read our blog">
+            <Link href="/blog" aria-label="Read our blog">
               Blogs
-            </a>
+            </Link>
           </Button>
           <Button asChild className="md:hidden bg-transparent" variant="outline">
-            <a href="#pricing" aria-label="See pricing">
-              Pricing
-            </a>
+            {/*
+              When already on "/", render an anchor that smooth-scrolls.
+              Otherwise, navigate to "/#pricing" and the page will scroll on load.
+            */}
+            {(() => {
+              const pathname = typeof window !== "undefined" ? window.location.pathname : undefined
+              if (pathname === "/") {
+                return (
+                  <a
+                    href="/#pricing"
+                    aria-label="See pricing"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      const el = document.getElementById("pricing")
+                      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" })
+                    }}
+                  >
+                    Pricing
+                  </a>
+                )
+              }
+              return (
+                <Link href={{ pathname: "/", hash: "pricing" }} aria-label="See pricing">
+                  Pricing
+                </Link>
+              )
+            })()}
           </Button>
         </div>
       </nav>
