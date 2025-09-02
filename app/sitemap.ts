@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next"
 import { getAllPosts } from "@/lib/blog-data"
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://feedlooply.com/"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts?.() || []
