@@ -23,12 +23,22 @@ export function Navbar() {
           <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground">
             FAQ
           </a>
+          {/* Blogs link */}
+          <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground">
+            Blogs
+          </Link>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="hidden md:block">
             <SubscribeButton />
           </div>
+          {/* mobile buttons */}
+          <Button asChild className="md:hidden bg-transparent" variant="outline">
+            <a href="/blog" aria-label="Read our blog">
+              Blogs
+            </a>
+          </Button>
           <Button asChild className="md:hidden bg-transparent" variant="outline">
             <a href="#pricing" aria-label="See pricing">
               Pricing
