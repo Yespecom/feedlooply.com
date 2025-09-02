@@ -20,7 +20,6 @@ export type Blog = {
 }
 
 function renderWithLinks(text: string) {
-  // Parse [label](href) and render as <Link>
   const parts: Array<string | { label: string; href: string }> = []
   const regex = /\[([^\]]+)\]$$([^)]+)$$/g
   let lastIndex = 0
