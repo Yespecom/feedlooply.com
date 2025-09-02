@@ -21,24 +21,56 @@ export type Blog = {
 
 function renderWithLinks(text: string) {
   const parts: Array<string | { label: string; href: string }> = []
-  const regex = /\[([^\]]+)\]$$([^)]+)$$/g
+  // Correct Markdown link pattern: [label](href)
+  const markdownLinkRegex = /\[([^\]]+)\]$$([^)]+)$$/g
   let lastIndex = 0
   let match: RegExpExecArray | null
-  while ((match = regex.exec(text)) !== null) {
+
+  while ((match = markdownLinkRegex.exec(text)) !== null) {
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index))
     }
     parts.push({ label: match[1], href: match[2] })
-    lastIndex = regex.lastIndex
+    lastIndex = markdownLinkRegex.lastIndex
   }
   if (lastIndex < text.length) {
     parts.push(text.slice(lastIndex))
   }
+
+  // Helper to auto-link bare "(/blog/...)" occurrences inside plain strings
+  const renderAutoLinks = (s: string) => {
+    const nodes: React.ReactNode[] = []
+    const barePathRegex = /$$\/[a-z0-9\-/]+$$/gi
+    let li = 0
+    let m: RegExpExecArray | null
+    while ((m = barePathRegex.exec(s)) !== null) {
+      if (m.index > li) {
+        nodes.push(<span key={`t-${nodes.length}`}>{s.slice(li, m.index)}</span>)
+      }
+      const path = m[0].slice(1, -1) // strip surrounding parentheses
+      nodes.push(
+        <Link
+          key={`l-${nodes.length}`}
+          href={path}
+          className="underline decoration-primary underline-offset-4 hover:opacity-90"
+        >
+          {path}
+        </Link>,
+      )
+      li = barePathRegex.lastIndex
+    }
+    if (li < s.length) {
+      nodes.push(<span key={`t-${nodes.length}`}>{s.slice(li)}</span>)
+    }
+    return nodes
+  }
+
   return (
     <>
       {parts.map((part, i) =>
         typeof part === "string" ? (
-          <span key={i}>{part}</span>
+          // Render text while auto-linking bare "(/blog/...)" patterns
+          <span key={i}>{renderAutoLinks(part)}</span>
         ) : (
           <Link key={i} href={part.href} className="underline decoration-primary underline-offset-4 hover:opacity-90">
             {part.label}
