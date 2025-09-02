@@ -40,14 +40,15 @@ function renderWithLinks(text: string) {
   // Helper to auto-link bare "(/blog/...)" occurrences inside plain strings
   const renderAutoLinks = (s: string) => {
     const nodes: React.ReactNode[] = []
-    const barePathRegex = /$$\/[a-z0-9\-/]+$$/gi
+    // match parentheses wrapping a path, e.g. "(/blog/closing-feedback-loops-in-enterprise)"
+    const barePathRegex = /$$(\/[a-z0-9\-/]+)$$/gi
     let li = 0
     let m: RegExpExecArray | null
     while ((m = barePathRegex.exec(s)) !== null) {
       if (m.index > li) {
         nodes.push(<span key={`t-${nodes.length}`}>{s.slice(li, m.index)}</span>)
       }
-      const path = m[0].slice(1, -1) // strip surrounding parentheses
+      const path = m[1] // captured path without parentheses
       nodes.push(
         <Link
           key={`l-${nodes.length}`}
@@ -69,7 +70,6 @@ function renderWithLinks(text: string) {
     <>
       {parts.map((part, i) =>
         typeof part === "string" ? (
-          // Render text while auto-linking bare "(/blog/...)" patterns
           <span key={i}>{renderAutoLinks(part)}</span>
         ) : (
           <Link key={i} href={part.href} className="underline decoration-primary underline-offset-4 hover:opacity-90">
