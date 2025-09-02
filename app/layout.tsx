@@ -9,16 +9,31 @@ import { Footer } from "@/components/footer"
 import { Suspense } from "react"
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
+  ),
   title: {
     default: "FeedLooply",
     template: "%s | FeedLooply",
   },
   description:
     "Feedlooply helps businesses streamline feedback, boost engagement, and build stronger customer relationships with smart, easy-to-use tools",
-
   applicationName: "FeedLooply",
-  keywords: ["startup", "saas", "ai", "productivity", "founder"],
+  author: "FeedLooply Team",
+  keywords: [
+    "startup",
+    "saas",
+    "ai",
+    "productivity",
+    "feedback management",
+    "customer engagement",
+    "founder tools",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+  },
   openGraph: {
     type: "website",
     url: "/",
@@ -26,6 +41,7 @@ export const metadata: Metadata = {
     description:
       "Feedlooply helps businesses streamline feedback, boost engagement, and build stronger customer relationships with smart, easy-to-use tools",
     siteName: "FeedLooply",
+    locale: "en_US",
     images: [
       {
         url: "/opengraph-image.png",
@@ -41,6 +57,8 @@ export const metadata: Metadata = {
     description:
       "Feedlooply helps businesses streamline feedback, boost engagement, and build stronger customer relationships with smart, easy-to-use tools",
     images: ["/twitter-image.png"],
+    site: "@FeedLooply",
+    creator: "@FeedLooply",
   },
   alternates: {
     canonical: "/",
@@ -57,7 +75,25 @@ export const metadata: Metadata = {
   },
   viewport: "width=device-width, initial-scale=1",
   themeColor: "#0ea5e9",
+  manifest: "/site.webmanifest",
+  metadataBaseSchema: {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "FeedLooply",
+    url: process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000",
+    description:
+      "Feedlooply helps businesses streamline feedback, boost engagement, and build stronger customer relationships with smart, easy-to-use tools",
+    publisher: {
+      "@type": "Organization",
+      name: "FeedLooply",
+      logo: {
+        "@type": "ImageObject",
+        url: "/favicon-32x32.png",
+      },
+    },
+  },
 }
+
 
 export default function RootLayout({
   children,
