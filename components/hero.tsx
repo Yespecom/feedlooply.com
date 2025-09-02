@@ -58,6 +58,14 @@ export function Hero() {
             >
               Early Founder Lifetime Deal — one-time, lifetime access
             </motion.div>
+            <motion.p
+  initial={{ opacity: 0, y: 8 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4, delay: 0.14 }}
+  className="text-xs text-muted-foreground"
+>
+  Join 20+ early users
+</motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 8 }}
