@@ -232,4 +232,3 @@ type ServiceAccount = {
   
   export const appendSubscriberRow = appendSubscriber
   export const appendPaymentRow = appendPayment
-  
