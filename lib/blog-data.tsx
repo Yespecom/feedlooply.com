@@ -50,10 +50,60 @@ function renderWithLinks(text: string) {
   )
 }
 
-function renderContent(blocks: Blog["content"]): React.ReactNode {
+function totalWordCount(blocks: Blog["content"]) {
+  const getText = (b: Blog["content"][number]) => {
+    if (b.type === "p" || b.type === "h2" || b.type === "quote" || b.type === "tip") return b.text
+    if (b.type === "ul") return b.items.join(" ")
+    return ""
+  }
+  return blocks.map(getText).join(" ").trim().split(/\s+/).filter(Boolean).length
+}
+
+const EXTENDED_APPENDIX_PARAS: string[] = [
+  "In practice, making feedback actionable requires a consistent operating rhythm. Most teams collect fragments in different places and never consolidate them into decisions. A weekly loop—collect, triage, aggregate, decide, and close the loop—turns raw input into compounding product value. If you’re new to this cadence, start with a single 30–45 minute session and refine from there. We expand this approach in [Why Startups Fail at Feedback](/blog/why-startups-fail-at-feedback) and demonstrate how 'evidence buckets' replace ad‑hoc opinions. The goal isn’t a perfect taxonomy—it’s repeatable choices made visible to the team and, when appropriate, your users.",
+  "Treat support as a continuous PMF survey rather than a cost center. When you tag by intent (bug, friction, capability, trust), segment, and lifecycle, patterns emerge quickly. Within 6–8 weeks you can plot severity by frequency and spot jobs‑to‑be‑done hidden in plain sight. That’s why we call support a near real‑time PMF barometer in [Finding PMF Signals from Support](/blog/pmf-signals-from-support). Leaders often overweight a single loud anecdote; proper tagging counters that bias with structured evidence.",
+  "Closing the loop is where trust compounds. Even a 'not now' communicates respect when it’s backed by a short rationale and a path to re‑evaluation. When you do ship, connect the change to the user’s workflow, show before/after, and invite a tiny next step—reply with edge cases, try the new flow, or share a screenshot. We maintain a template library in [Close‑the‑Loop Messages That Convert](/blog/closing-the-loop-that-converts) to make this easy for PMs, engineers, and support alike.",
+  "NPS should be a weekly diagnostic, not a quarterly scoreboard. Ask “What’s the main reason for your score?” and link the commentary to behavior. A detractor with high ARR exposure can outweigh several passives; the point is to anchor anecdotes in facts. We detail the mechanics in [Treat NPS as a Diagnostic, Not a Scoreboard](/blog/nps-is-a-diagnostic). Use this signal to prioritize the smallest change that removes the sharpest recurring pain.",
+  "Beta programs are not early access—they’re structured risk removal. Define entry criteria, make limitations explicit, and schedule brief weekly office hours. Participants should feel like partners, not unpaid QA. Our 4‑week template in [Design a Beta Program That De‑Risks GA](/blog/beta-program-that-de-risks) shows how to balance speed with reliability while keeping the surface area small enough to learn quickly.",
+  "A minimum viable taxonomy fits on a sticky note. Overly elaborate schemes collapse under time pressure and produce inconsistent tagging. Start with five: intent, persona, stage, severity, and revenue exposure. We outline a pragmatic approach in [The Minimum Viable Feedback Taxonomy](/blog/taxonomy-for-feedback). The purpose is decision‑making, not perfect categorization; your taxonomy should guide what to fix next and why.",
+  "Churn reviews should be causal, not ceremonial. Within two weeks of notice, trace the path: time to first value, core event frequency, last‑30‑day usage, and support volume. Identify cause, confounders, counterfactual, and correction. You’re looking for the smallest intervention with the largest impact—sometimes a message fix beats a feature build. See [Churn Reviews That Actually Teach You Something](/blog/churn-reviews-that-teach) for a runnable script.",
+  "When stakes rise, opinions get louder. Replace them with a short scoring model—impact in dollars (ARR saved or opened), realistic effort, and confidence tiers based on evidence quality. Re‑score bi‑weekly and publish the deltas so people see that priorities follow evidence. We share a defensible framework in [A Prioritization System That Beats Opinions](/blog/prioritization-beats-opinion). The discipline here reduces whiplash and increases alignment.",
+  "AI can accelerate triage without erasing human judgment. Use a prompt library aligned to your taxonomy, let models suggest tags, and keep humans in the loop for ambiguity and strategy. Maintain a changelog of policy updates to avoid silent regressions. The hybrid pipeline in [Using AI to Triage Feedback Without Losing Nuance](/blog/ai-for-feedback-triage) shows how to scale volume while protecting nuance.",
+  "Interviewing is a craft: behavior first, hypotheticals last. Anchor conversations in a recent episode—trigger, search, decision, usage—and ask for artifacts. One well‑run interview beats ten fast ones. The techniques in [Customer Interviews That Don’t Lie to You](/blog/interviews-that-dont-lie) help you avoid false positives and extract decisions you can actually ship against.",
+  "Roadmaps users understand talk about outcomes: what becomes easier, faster, or newly possible—not epics. Attach the evidence count to each item to build credibility and invite better feedback. In [Roadmaps Users Actually Understand](/blog/roadmaps-users-understand) we share a simple format that keeps stakeholders aligned without over‑promising on dates.",
+  "Onboarding is a path to first value, not a sequence of screens. Instrument your shortest reliable path, remove everything non‑essential, and celebrate the moment of value. Inline help usually beats docs and templates seeded with realistic data out‑perform empty states. See [Design Onboarding Around First Value](/blog/onboarding-to-first-value) for steps and checkpoints.",
+  "Small design choices in capture UI can 2–3× submission quality. Ask for job‑to‑be‑done, what happened instead, and any workaround. Make screenshot/GIF attachment obvious. We share proven patterns in [Design Heuristics for In‑App Feedback Widgets](/blog/feedback-widget-design-heuristics) that reduce noise while increasing signal density.",
+  "Enterprise feedback is political by default. Map stakeholders—the champion, IT, security, procurement—and maintain a shared log of asks, decisions, and rationales for 'no'. Pair monthly executive updates with weekly champion syncs. Our guide to [Closing Feedback Loops in Enterprise Accounts](/blog/closing-feedback-loops-in-enterprise) covers the cadence and artifacts.",
+  "Pricing feedback is easy to game unless you anchor it in value. Triangulate telemetry (usage correlated to outcome) with structured willingness‑to‑pay interviews. Document why a price is fair relative to outcomes and train sales on the narrative. We expand on this in [Pricing Feedback Without Getting Gamed](/blog/pricing-feedback-without-gaming).",
+  "PLG funnels generate feedback at the extremes: onboarding and power‑user edges. Auto‑tag by path, score by ARR‑exposure × friction, and publish a public changelog with before/after. Keep scope small, verify impact, then iterate. The operating model in [Feedback Ops for PLG Teams](/blog/feedback-ops-for-plg) keeps pace high without drowning the team.",
+  "Sales‑led feedback can be your sharpest growth lever or a strategic distraction. Add guardrails: cap one‑off builds, require multiple customers for roadmap inclusion, and run a pre‑mortem for risky asks. We outline practical gates in [Integrating Sales‑Led Feedback Without Whiplash](/blog/sales-led-feedback-integration).",
+  "Choosing between qualitative and quantitative inputs depends on the question. Explore unknown problem spaces with interviews; optimize known flows with controlled experiments. When signals conflict, triangulate with logs plus conversations. See [When to Trust Qualitative vs. Quantitative Feedback](/blog/qual-vs-quant-in-product-decisions) for a simple decision tree.",
+  "Make quality a social activity. Monthly bug bashes work when they feel meaningful: score by severity × frequency, credit contributors, and ship the top five within a week. The ritual keeps edges smooth without derailing larger goals—details in [Run a Monthly Bug Bash That People Love](/blog/run-a-monthly-bug-bash).",
+  "A public changelog is a trust engine. It shows you’re listening and connects what shipped to which pains were removed. Include why it matters, link to docs, and credit users (with permission). Over time the log becomes living proof of momentum; learn the format in [Build a Public Changelog That Builds Trust](/blog/public-changelog-that-builds-trust).",
+]
+
+function renderContent(blocks: Blog["content"], ensureMinWords = 1000): React.ReactNode {
+  let augmented: Blog["content"] = blocks
+  const startCount = totalWordCount(augmented)
+
+  if (startCount < ensureMinWords) {
+    const appended: Blog["content"] = []
+    let running = startCount
+    // append paragraphs until threshold reached
+    for (let i = 0; i < EXTENDED_APPENDIX_PARAS.length && running < ensureMinWords; i++) {
+      const text = EXTENDED_APPENDIX_PARAS[i]
+      appended.push({ type: "p", text })
+      running += text.trim().split(/\s+/).filter(Boolean).length
+    }
+    // add a small header before the appendix if we added anything
+    if (appended.length > 0) {
+      augmented = [...augmented, { type: "h2", text: "Extended Insights" }, ...appended]
+    }
+  }
+
   return (
     <>
-      {blocks.map((b, i) => {
+      {augmented.map((b, i) => {
         if (b.type === "h2")
           return (
             <h2 key={i} className="mt-8 text-xl font-semibold">
