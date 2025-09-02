@@ -837,3 +837,8 @@ export const POSTS: Record<string, PostDetail> = Object.fromEntries(
     },
   ]),
 )
+
+export function getAllPosts() {
+  // Return light-weight metadata list suitable for sitemaps and RSS
+  return BLOGS_META
+}
