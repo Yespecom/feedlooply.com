@@ -64,8 +64,35 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
 
   const related = BLOGS_META.filter((b) => b.slug !== params.slug).slice(0, 3)
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
+  const meta = BLOGS_META.find((b) => b.slug === params.slug)
+  const postUrl = `${siteUrl}/blog/${params.slug}`
+  const imageUrl = `${siteUrl}${meta?.coverImage || "/opengraph-image.png"}`
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    url: postUrl,
+    mainEntityOfPage: postUrl,
+    datePublished: meta?.date,
+    dateModified: meta?.date,
+    author: meta?.author ? { "@type": "Person", name: meta.author } : undefined,
+    publisher: {
+      "@type": "Organization",
+      name: "FeedLooply",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/favicon-32x32.png`,
+      },
+    },
+    image: [imageUrl],
+    keywords: meta?.tags?.join(", "),
+  }
+
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-10 md:py-16">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="mb-4 flex items-center justify-between">
         <Link
           href="/blog"
