@@ -6,6 +6,7 @@ import { ShareButton } from "@/components/share-button"
 import { InlineSubscribe } from "@/components/inline-subscribe"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { POSTS, BLOGS_META } from "@/lib/blog-data"
+import { SITE_KEYWORDS } from "@/lib/seo"
 
 type Post = {
   title: string
@@ -25,21 +26,31 @@ export async function generateMetadata(
       description: "Feedlooply Blog",
     }
   }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
+  const meta = BLOGS_META.find((b) => b.slug === params.slug)
+  const imageUrl = `${siteUrl}${meta?.coverImage || "/opengraph-image.png"}`
+  const mergedKeywords = Array.from(
+    new Set<string>([...(post.keywords || []), ...(meta?.tags || []), ...SITE_KEYWORDS]),
+  )
+
   return {
     title: post.title,
     description: post.description,
-    keywords: post.keywords,
+    keywords: mergedKeywords,
     alternates: { canonical: `/blog/${params.slug}` },
     openGraph: {
       title: post.title,
       description: post.description,
       type: "article",
       url: `/blog/${params.slug}`,
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: post.title }],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
+      images: [imageUrl],
     },
   }
 }
@@ -68,6 +79,10 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const meta = BLOGS_META.find((b) => b.slug === params.slug)
   const postUrl = `${siteUrl}/blog/${params.slug}`
   const imageUrl = `${siteUrl}${meta?.coverImage || "/opengraph-image.png"}`
+  const mergedKeywords = Array.from(
+    new Set<string>([...(post.keywords || []), ...(meta?.tags || []), ...SITE_KEYWORDS]),
+  )
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -87,7 +102,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       },
     },
     image: [imageUrl],
-    keywords: meta?.tags?.join(", "),
+    keywords: mergedKeywords.join(", "),
   }
 
   return (
