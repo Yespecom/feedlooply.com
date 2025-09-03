@@ -1,14 +1,15 @@
 import type { Metadata } from "next"
 import { BlogSearchGrid, type BlogMeta as BlogMetaType } from "@/components/blog-search-grid"
 import { BLOGS_META } from "@/lib/blog-data"
+import { SITE_KEYWORDS } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Blog",
   description: "Insights on feedback and growth. Tips, case studies, and lessons on building with customer feedback.",
   alternates: { canonical: "/blog" },
+  keywords: SITE_KEYWORDS,
 }
 
-// Use all posts; adjust ordering as needed (latest first)
 const posts: BlogMetaType[] = BLOGS_META
 
 export default function BlogIndexPage() {
