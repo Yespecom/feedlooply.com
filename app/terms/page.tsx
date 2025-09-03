@@ -1,6 +1,55 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Terms & Refund Policy – Early Founder Lifetime Deal",
+  description:
+    "Details of Feedlooply’s Early Founder Lifetime Deal, the 40-day launch guarantee, refunds, and payment terms.",
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    title: "Terms & Refund Policy – Early Founder Lifetime Deal",
+    description:
+      "Learn about the Early Founder Lifetime Deal, our 40-day launch guarantee, refund policy, and payment terms.",
+    url: "/terms",
+    type: "article",
+  },
+  twitter: {
+    card: "summary",
+    title: "Terms & Refund Policy – Early Founder Lifetime Deal",
+    description: "Early Founder Lifetime Deal details, 40-day launch guarantee, refunds, and payment terms.",
+  },
+}
+
 export default function TermsPage() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "https://feedlooply.com"
+  const offerJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Offer",
+    name: "Feedlooply – Early Founder Lifetime Deal",
+    url: `${siteUrl}/#pricing`,
+    priceCurrency: "USD",
+    price: "47.63",
+    availability: "https://schema.org/InStock",
+    category: "https://schema.org/BusinessFunction",
+    eligibleCustomerType: "https://schema.org/BusinessCustomer",
+    seller: {
+      "@type": "Organization",
+      name: "Feedlooply",
+      url: siteUrl,
+    },
+    offers: [
+      {
+        "@type": "Offer",
+        priceCurrency: "INR",
+        price: "3999",
+        availability: "https://schema.org/InStock",
+        url: `${siteUrl}/#pricing`,
+      },
+    ],
+  }
+
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offerJsonLd) }} />
       <h1 className="text-balance text-3xl font-semibold tracking-tight">
         Terms & Refund Policy – Feedlooply Early Access
       </h1>
