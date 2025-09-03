@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { SITE_KEYWORDS } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Terms & Refund Policy – Early Founder Lifetime Deal",
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
     title: "Terms & Refund Policy – Early Founder Lifetime Deal",
     description: "Early Founder Lifetime Deal details, 40-day launch guarantee, refunds, and payment terms.",
   },
+  keywords: SITE_KEYWORDS,
 }
 
 export default function TermsPage() {
