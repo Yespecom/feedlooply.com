@@ -21,7 +21,6 @@ export type Blog = {
 
 function renderWithLinks(text: string) {
   const parts: Array<string | { label: string; href: string }> = []
-  // Correct Markdown link pattern: [label](href)
   const markdownLinkRegex = /\[([^\]]+)\]$$([^)]+)$$/g
   let lastIndex = 0
   let match: RegExpExecArray | null
@@ -40,7 +39,6 @@ function renderWithLinks(text: string) {
   // Helper to auto-link bare "(/blog/...)" occurrences inside plain strings
   const renderAutoLinks = (s: string) => {
     const nodes: React.ReactNode[] = []
-    // match parentheses wrapping a path, e.g. "(/blog/closing-feedback-loops-in-enterprise)"
     const barePathRegex = /$$(\/[a-z0-9\-/]+)$$/gi
     let li = 0
     let m: RegExpExecArray | null
@@ -48,7 +46,7 @@ function renderWithLinks(text: string) {
       if (m.index > li) {
         nodes.push(<span key={`t-${nodes.length}`}>{s.slice(li, m.index)}</span>)
       }
-      const path = m[1] // captured path without parentheses
+      const path = m[1]
       nodes.push(
         <Link
           key={`l-${nodes.length}`}
@@ -898,6 +896,114 @@ export const BLOGS: Blog[] = [
       {
         type: "p",
         text: "Related reading: [Finding PMF Signals from Support](/blog/pmf-signals-from-support), [Roadmaps Users Actually Understand](/blog/roadmaps-users-understand), and [Pricing Feedback Without Getting Gamed](/blog/pricing-feedback-without-gaming).",
+      },
+    ],
+  },
+  {
+    slug: "canny-alternative-feedlooply",
+    title: "Feedlooply: The Affordable Canny Alternative for Startups",
+    excerpt:
+      "Canny is powerful—but pricey for early teams. Feedlooply helps you collect, analyze, and act on feedback without breaking your budget.",
+    author: "Aarav Shah",
+    date: "2025-09-03",
+    readingTime: "7 min",
+    tags: ["Canny alternative", "startup", "feedback tools", "pricing"],
+    // coverImage: "/feedlooply-affordable-canny-alternative.jpg",
+    content: [
+      { type: "h2", text: "Introduction" },
+      {
+        type: "p",
+        text: "If you’ve explored Canny for product feedback, you likely noticed one thing quickly—it’s expensive for early‑stage teams. Canny is a capable platform, but most startups can’t justify hundreds of dollars a month just to collect and organize feedback. That’s the gap Feedlooply fills: a practical, affordable alternative designed for small teams and indie makers.",
+      },
+      {
+        type: "p",
+        text: "With Feedlooply, you can collect, analyze, and act on feedback without adding pricing anxiety to every decision. It centralizes inputs, applies AI to reduce noise, and helps you close the loop visibly—so you ship what actually matters.",
+      },
+
+      { type: "h2", text: "Why Startups Look for Canny Alternatives" },
+      {
+        type: "ul",
+        items: [
+          "High pricing: plans that are hard to justify before PMF or meaningful revenue.",
+          "Overkill features: enterprise controls you don’t need in the first 12–18 months.",
+          "Scattered feedback: feedback lives in Slack, YouTube comments, Google Meet notes, and Notion, but collection isn’t effortless.",
+        ],
+      },
+      {
+        type: "p",
+        text: "If this sounds familiar, you’re not alone. Early teams need a lean system that increases signal and reduces ceremony. We outline the operating loop in [Why Startups Fail at Feedback](/blog/why-startups-fail-at-feedback) and show how to turn raw input into compounding product value.",
+      },
+
+      { type: "h2", text: "What Makes Feedlooply Different?" },
+      { type: "h2", text: "1) Collect Feedback Anywhere" },
+      {
+        type: "p",
+        text: "Feedlooply integrates with the tools you already use. You can capture feedback without forcing users to create accounts or learn new workflows.",
+      },
+      {
+        type: "ul",
+        items: ["Slack", "YouTube comments", "Google Meet transcripts", "Notion pages"],
+      },
+      {
+        type: "p",
+        text: "No logins required for contributors—just drop feedback instantly. Pair this with an in‑app widget (see [Design Heuristics for In‑App Feedback Widgets](/blog/feedback-widget-design-heuristics)) to 2–3× submission quality.",
+      },
+
+      { type: "h2", text: "2) AI‑Powered Insights" },
+      {
+        type: "ul",
+        items: [
+          "Detect duplicates automatically so teams don’t triage the same issue repeatedly.",
+          "Sentiment analysis to get a quick read on positive, neutral, or negative signals.",
+          "AI clustering by topics to reveal jobs‑to‑be‑done hidden in plain sight.",
+          "Monthly summaries so you act faster and communicate progress clearly.",
+        ],
+      },
+      {
+        type: "p",
+        text: "Our hybrid approach—automation assisted by humans—keeps speed high without losing nuance. See [Using AI to Triage Feedback Without Losing Nuance](/blog/ai-for-feedback-triage).",
+      },
+
+      { type: "h2", text: "3) Simple & Affordable Pricing" },
+      {
+        type: "p",
+        text: "We believe feedback shouldn’t be a luxury. Feedlooply is launching with an Early Access one‑time price of just $47.63. No monthly drain, no complexity—just a lean system that gets the job done.",
+      },
+
+      { type: "h2", text: "Who Should Use Feedlooply?" },
+      {
+        type: "ul",
+        items: [
+          "Indie hackers who need fast feedback without big SaaS bills.",
+          "Founders who want to understand their first users deeply.",
+          "Small teams tired of scattered Docs, Slack threads, and disjointed notes.",
+        ],
+      },
+
+      { type: "h2", text: "Final Thoughts" },
+      {
+        type: "p",
+        text: "If you’re looking for a Canny alternative that’s affordable, lightweight, and startup‑friendly, Feedlooply is for you. It centralizes signals, reduces noise, and helps you ship with confidence.",
+      },
+      {
+        type: "p",
+        text: "👉 Join Feedlooply Early Access—just $47.63 one‑time for lifetime access. Explore [Features](/#features) or check [Pricing](/#pricing) to get started.",
+      },
+
+      { type: "h2", text: "Related Reading & SEO Keywords" },
+      {
+        type: "ul",
+        items: [
+          "Canny alternative",
+          "Canny vs Feedlooply",
+          "Startup feedback tools",
+          "Affordable feedback software",
+          "Best user feedback platforms",
+        ],
+      },
+      {
+        type: "p",
+        text: "More resources: [Closing Feedback Loops in Enterprise Accounts](/blog/closing-feedback-loops-in-enterprise), [Roadmaps Users Actually Understand](/blog/roadmaps-users-understand), and [Pricing Feedback Without Getting Gamed](/blog/pricing-feedback-without-gaming).",
       },
     ],
   },
