@@ -1,3 +1,22 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Refund Policy – Feedlooply",
+  description: "Our 40-day launch guarantee, refund eligibility, and how to contact us for refund questions.",
+  alternates: { canonical: "/refund-policy" },
+  openGraph: {
+    title: "Refund Policy – Feedlooply",
+    description: "Learn about our 40-day launch guarantee and refund eligibility.",
+    url: "/refund-policy",
+    type: "article",
+  },
+  twitter: {
+    card: "summary",
+    title: "Refund Policy – Feedlooply",
+    description: "Our 40-day launch guarantee and refund eligibility.",
+  },
+}
+
 export default function RefundPolicyPage() {
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-12">
