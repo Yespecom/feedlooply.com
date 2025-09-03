@@ -7,11 +7,10 @@ import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Suspense } from "react"
+import { SITE_KEYWORDS } from "@/lib/seo"
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
-  ),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "https://feedlooply.com/"),
   title: {
     default: "FeedLooply",
     template: "%s | FeedLooply",
@@ -20,15 +19,18 @@ export const metadata: Metadata = {
     "Feedlooply helps businesses streamline feedback, boost engagement, and build stronger customer relationships with smart, easy-to-use tools",
   applicationName: "FeedLooply",
   author: "FeedLooply Team",
-  keywords: [
-    "startup",
-    "saas",
-    "ai",
-    "productivity",
-    "feedback management",
-    "customer engagement",
-    "founder tools",
-  ],
+  keywords: Array.from(
+    new Set<string>([
+      "startup",
+      "saas",
+      "ai",
+      "productivity",
+      "feedback management",
+      "customer engagement",
+      "founder tools",
+      ...SITE_KEYWORDS,
+    ]),
+  ),
   robots: {
     index: true,
     follow: true,
@@ -92,9 +94,8 @@ export const metadata: Metadata = {
       },
     },
   },
-    generator: 'v0.app'
+  generator: "v0.app",
 }
-
 
 export default function RootLayout({
   children,
