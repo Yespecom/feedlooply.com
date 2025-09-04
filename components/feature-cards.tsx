@@ -35,7 +35,7 @@ export function FeatureCards() {
           return (
             <Card
               key={f.title}
-              className="group relative overflow-hidden border bg-background/80 backdrop-blur-sm transition-all hover:-translate-y-1 hover:shadow-md"
+              className="group relative overflow-hidden border bg-white dark:bg-card backdrop-blur-sm transition-all hover:-translate-y-1 hover:shadow-md"
             >
               <div
                 aria-hidden
