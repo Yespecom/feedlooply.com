@@ -1,118 +1,154 @@
 import { type NextRequest, NextResponse } from "next/server"
 import nodemailer from "nodemailer"
 
-async function sendEmails(registrationData: any) {
-  try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number.parseInt(process.env.SMTP_PORT || "587"),
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-    })
-
-    // Simple confirmation email template
-    const confirmationEmail = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #1a73e8;">Webinar Registration Confirmed!</h2>
-        
-        <p>Hi ${registrationData.name},</p>
-        
-        <p>Thank you for registering for our exclusive webinar on <strong>September 8, 2025</strong>.</p>
-        
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="margin: 0 0 10px 0; color: #333;">Webinar Details:</h3>
-          <p style="margin: 5px 0;"><strong>Date:</strong> September 8, 2025</p>
-          <p style="margin: 5px 0;"><strong>Time:</strong> 7:00 PM IST</p>
-          <p style="margin: 5px 0;"><strong>Duration:</strong> 90 minutes</p>
-        </div>
-        
-        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="margin: 0 0 10px 0; color: #333;">Join Our WhatsApp Community:</h3>
-          <p>Connect with fellow participants and get updates:</p>
-          <a href="https://chat.whatsapp.com/CABPoAysyrx4MOTr2lYG9G?mode=ems_copy_t" 
-             style="display: inline-block; background: #25d366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 10px;">
-            Join WhatsApp Group
-          </a>
-        </div>
-        
-        <p>We'll send you the webinar link closer to the date.</p>
-        
-        <p>Best regards,<br>The FeedLooply Team</p>
-      </div>
-    `
-
-    // Admin notification email
-    const adminEmail = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #1a73e8;">New Webinar Registration</h2>
-        
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-          <p><strong>Name:</strong> ${registrationData.name}</p>
-          <p><strong>Email:</strong> ${registrationData.email}</p>
-          <p><strong>Phone:</strong> ${registrationData.phone || "Not provided"}</p>
-          <p><strong>Company:</strong> ${registrationData.company || "Not provided"}</p>
-          <p><strong>Experience:</strong> ${registrationData.experience || "Not provided"}</p>
-          <p><strong>Expectations:</strong> ${registrationData.expectations || "Not provided"}</p>
-          <p><strong>Registration Time:</strong> ${new Date().toLocaleString()}</p>
-        </div>
-      </div>
-    `
-
-    // Send confirmation email to registrant
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to: registrationData.email,
-      subject: "Webinar Registration Confirmed - September 8, 2025",
-      html: confirmationEmail,
-    })
-
-    // Send notification to admin
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to: "srinithinoffl@gmail.com",
-      subject: "New Webinar Registration",
-      html: adminEmail,
-    })
-
-    console.log("[Webinar] Emails sent successfully")
-  } catch (error) {
-    console.error("[Webinar] Email error:", error)
-    // Don't throw error - registration should succeed even if emails fail
-  }
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, phone, company, experience, expectations } = body
+    const { name, email, phone, company, experience, goals } = body
 
     // Validate required fields
-    if (!name || !email) {
-      return NextResponse.json({ error: "Name and email are required" }, { status: 400 })
+    if (!name || !email || !phone) {
+      return NextResponse.json({ error: "Name, email, and phone are required" }, { status: 400 })
     }
 
-    // Log the registration
     console.log("[Webinar] New registration:", {
       name,
       email,
       phone,
       company,
       experience,
-      expectations,
+      expectations: goals,
       timestamp: new Date().toISOString(),
     })
 
-    // Send emails asynchronously (don't wait for completion)
-    sendEmails({ name, email, phone, company, experience, expectations }).catch(console.error)
+    const transporter = nodemailer.createTransporter({
+      host: process.env.SMTP_HOST || "smtp.gmail.com",
+      port: Number.parseInt(process.env.SMTP_PORT || "587"),
+      secure: process.env.SMTP_PORT === "465", // true for 465, false for other ports
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+      connectionTimeout: 60000, // 60 seconds
+      greetingTimeout: 30000, // 30 seconds
+      socketTimeout: 60000, // 60 seconds
+      pool: true, // use pooled connections
+      maxConnections: 1, // limit concurrent connections
+      rateDelta: 20000, // limit rate to 3 messages per 20 seconds
+      rateLimit: 3,
+      tls: {
+        rejectUnauthorized: false, // Accept self-signed certificates
+      },
+    })
+
+    const testConnection = async () => {
+      try {
+        await transporter.verify()
+        console.log("[Webinar] SMTP connection verified successfully")
+        return true
+      } catch (error) {
+        console.error("[Webinar] SMTP connection failed:", error)
+        return false
+      }
+    }
+
+    // Simple confirmation email template
+    const confirmationEmailHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Webinar Registration Confirmed</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
+          <h1 style="color: #1a73e8; margin: 0 0 20px 0;">Registration Confirmed! 🎉</h1>
+          <p style="font-size: 16px; margin: 0;">Hi ${name},</p>
+          <p style="font-size: 16px;">Thank you for registering for our exclusive webinar!</p>
+        </div>
+        
+        <div style="background: white; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #333; margin-top: 0;">Webinar Details</h2>
+          <p><strong>Date:</strong> September 8, 2025</p>
+          <p><strong>Time:</strong> 7:00 PM IST</p>
+          <p><strong>Duration:</strong> 60 minutes</p>
+          <p><strong>Platform:</strong> Zoom (link will be shared closer to the date)</p>
+        </div>
+
+        <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h3 style="color: #2d5a2d; margin-top: 0;">Join Our WhatsApp Community</h3>
+          <p>Connect with fellow participants and get updates:</p>
+          <a href="https://chat.whatsapp.com/CABPoAysyrx4MOTr2lYG9G?mode=ems_copy_t" 
+             style="display: inline-block; background: #25d366; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+            Join WhatsApp Group
+          </a>
+        </div>
+
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+          <p style="margin: 0; font-size: 14px; color: #666;">
+            We're excited to have you join us! If you have any questions, feel free to reach out.
+          </p>
+        </div>
+      </body>
+      </html>
+    `
+
+    // Admin notification email
+    const adminEmailHtml = `
+      <!DOCTYPE html>
+      <html>
+      <body style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2>New Webinar Registration</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Company:</strong> ${company || "Not provided"}</p>
+        <p><strong>Experience:</strong> ${experience || "Not provided"}</p>
+        <p><strong>Goals:</strong> ${goals || "Not provided"}</p>
+        <p><strong>Registration Time:</strong> ${new Date().toLocaleString()}</p>
+      </body>
+      </html>
+    `
+
+    const sendEmails = async () => {
+      const connectionOk = await testConnection()
+
+      if (!connectionOk) {
+        console.log("[Webinar] Skipping email sending due to SMTP connection issues")
+        return
+      }
+
+      try {
+        await Promise.all([
+          // Confirmation email to registrant
+          transporter.sendMail({
+            from: process.env.SMTP_FROM || process.env.SMTP_USER,
+            to: email,
+            subject: "Webinar Registration Confirmed - September 8, 2025",
+            html: confirmationEmailHtml,
+          }),
+          // Admin notification
+          transporter.sendMail({
+            from: process.env.SMTP_FROM || process.env.SMTP_USER,
+            to: "srinithinoffl@gmail.com",
+            subject: `New Webinar Registration: ${name}`,
+            html: adminEmailHtml,
+          }),
+        ])
+        console.log("[Webinar] Emails sent successfully")
+      } catch (error) {
+        console.error("[Webinar] Email sending failed:", error)
+      } finally {
+        transporter.close()
+      }
+    }
+
+    // Send emails asynchronously (don't block response)
+    sendEmails()
 
     return NextResponse.json({
       success: true,
-      message: "Registration successful! You will receive confirmation details soon.",
+      message: "Registration successful! Check your email for confirmation.",
     })
   } catch (error) {
     console.error("[Webinar] Registration error:", error)
