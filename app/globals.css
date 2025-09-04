@@ -9,8 +9,8 @@
   --foreground: #111827;
 
   /* Surfaces */
-  --card: #6366f1; /* Pricing cards can use Card with brand surface */
-  --card-foreground: #ffffff;
+  --card: #ffffff; /* Pricing cards can use Card with brand surface */
+  --card-foreground: #111827;
   --popover: #ffffff;
   --popover-foreground: #111827;
 
