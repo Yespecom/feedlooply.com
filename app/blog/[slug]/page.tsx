@@ -8,67 +8,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { POSTS, BLOGS_META } from "@/lib/blog-data"
 import { SITE_KEYWORDS } from "@/lib/seo"
 
+// ✅ Ensure child components are client components
+// At the top of ShareButton.tsx & InlineSubscribe.tsx, add: "use client"
+
 type Post = {
   title: string
   description: string
   keywords?: string[]
-  coverImage?: string
-  author?: string
-  date?: string
-  readingTime?: string
-  content: { type: string; text: string }[]
-}
-
-function getImageUrl(meta?: { coverImage?: string }, siteUrl?: string) {
-  const baseUrl =
-    siteUrl || process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
-  const img = meta?.coverImage
-  if (!img) return `${baseUrl}/opengraph-image.png`
-  return img.startsWith("http") ? img : `${baseUrl}${img}`
-}
-
-function RenderContent({ content }: { content: { type: string; text: string }[] }) {
-  return (
-    <>
-      {content.map((block, i) => {
-        if (block.type === "h2") {
-          return (
-            <h2
-              key={i}
-              className="mt-10 text-2xl font-semibold tracking-tight text-black dark:text-white"
-            >
-              {block.text}
-            </h2>
-          )
-        }
-        if (block.type === "p") {
-          return (
-            <p key={i} className="mt-4 text-base leading-relaxed text-muted-foreground">
-              {block.text}
-            </p>
-          )
-        }
-        if (block.type === "h3") {
-          return (
-            <h3
-              key={i}
-              className="mt-8 text-xl font-semibold tracking-tight text-black dark:text-white"
-            >
-              {block.text}
-            </h3>
-          )
-        }
-        return null
-      })}
-    </>
-  )
+  content?: React.ReactNode
 }
 
 export async function generateMetadata(
   { params }: { params: { slug: string } },
   _parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const post = POSTS[params.slug] as Post | undefined
+  const post = POSTS[params.slug]
+  const meta = BLOGS_META.find((b) => b.slug === params.slug)
+
   if (!post) {
     return {
       title: "Blog",
@@ -77,8 +33,7 @@ export async function generateMetadata(
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
-  const meta = BLOGS_META.find((b) => b.slug === params.slug)
-  const imageUrl = getImageUrl(meta, siteUrl)
+  const imageUrl = `${siteUrl}${meta?.coverImage || "/opengraph-image.png"}`
   const mergedKeywords = Array.from(
     new Set<string>([...(post.keywords || []), ...(meta?.tags || []), ...SITE_KEYWORDS]),
   )
@@ -105,20 +60,17 @@ export async function generateMetadata(
 }
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = POSTS[params.slug] as Post | undefined
+  const post = POSTS[params.slug]
+  const meta = BLOGS_META.find((b) => b.slug === params.slug)
 
+  // ✅ If post not found
   if (!post) {
     return (
       <main className="mx-auto w-full max-w-3xl px-4 py-10 md:py-16">
-        <h1 className="text-balance text-2xl md:text-3xl font-semibold tracking-tight">
-          Post not found
-        </h1>
+        <h1 className="text-balance text-2xl md:text-3xl font-semibold tracking-tight">Post not found</h1>
         <p className="mt-2 text-muted-foreground">
           The article you’re looking for doesn’t exist yet. Explore other posts on the{" "}
-          <Link
-            href="/blog"
-            className="underline decoration-primary underline-offset-4 hover:opacity-90"
-          >
+          <Link href="/blog" className="underline decoration-primary underline-offset-4 hover:opacity-90">
             blog
           </Link>
           .
@@ -127,12 +79,10 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     )
   }
 
-  const related = BLOGS_META.filter((b) => b.slug !== params.slug).slice(0, 3)
-
+  // ✅ Safe fallbacks
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
-  const meta = BLOGS_META.find((b) => b.slug === params.slug)
   const postUrl = `${siteUrl}/blog/${params.slug}`
-  const imageUrl = getImageUrl(meta, siteUrl)
+  const imageUrl = `${siteUrl}${meta?.coverImage || "/opengraph-image.png"}`
   const mergedKeywords = Array.from(
     new Set<string>([...(post.keywords || []), ...(meta?.tags || []), ...SITE_KEYWORDS]),
   )
@@ -144,12 +94,12 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     description: post.description,
     url: postUrl,
     mainEntityOfPage: postUrl,
-    datePublished: meta?.date,
-    dateModified: meta?.date,
-    author: post.author ? { "@type": "Person", name: post.author } : undefined,
+    datePublished: meta?.date || new Date().toISOString(),
+    dateModified: meta?.date || new Date().toISOString(),
+    author: meta?.author ? { "@type": "Person", name: meta.author } : { "@type": "Organization", name: "Feedlooply" },
     publisher: {
       "@type": "Organization",
-      name: "FeedLooply",
+      name: "Feedlooply",
       logo: {
         "@type": "ImageObject",
         url: `${siteUrl}/favicon-32x32.png`,
@@ -159,12 +109,13 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     keywords: mergedKeywords.join(", "),
   }
 
+  const related = BLOGS_META.filter((b) => b.slug !== params.slug).slice(0, 3)
+
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-10 md:py-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
+      {/* Back + Share */}
       <div className="mb-4 flex items-center justify-between">
         <Link
           href="/blog"
@@ -177,33 +128,24 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         <ShareButton title={post.title} showNetworks />
       </div>
 
+      {/* Title + Description */}
       <header className="mb-6">
-        <h1 className="text-balance text-3xl md:text-4xl font-semibold tracking-tight">
-          {post.title}
-        </h1>
-        <p className="mt-3 text-muted-foreground">{post.description}</p>
-
-        {/* Blog Cover Image */}
-        {post.coverImage && (
+        <h1 className="text-balance text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
+        {meta?.coverImage && (
           <img
-            src={imageUrl}
+            src={meta.coverImage}
             alt={post.title}
-            className="mt-6 w-full rounded-lg border bg-muted/20 object-cover"
-            onError={(e) => (e.currentTarget.src = "/opengraph-image.png")}
+            className="mt-4 w-full rounded-lg border shadow-sm"
+            loading="lazy"
           />
         )}
-
-        <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-          {post.author && <span>✍️ {post.author}</span>}
-          {post.date && <span>📅 {post.date}</span>}
-          {post.readingTime && <span>⏱ {post.readingTime}</span>}
-        </div>
+        <p className="mt-3 text-muted-foreground">{post.description}</p>
       </header>
 
-      {/* Render blog content */}
-      <RenderContent content={post.content} />
+      {/* ✅ Safe render of content */}
+      {post.content ? post.content : <p className="text-muted-foreground">Content coming soon…</p>}
 
-      {/* Subscribe box */}
+      {/* Subscribe */}
       <section className="mt-10 rounded-lg border bg-muted/30 p-5">
         <h2 className="text-lg font-semibold">Get new posts in your inbox</h2>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -214,7 +156,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         </div>
       </section>
 
-      {/* Call to action */}
+      {/* Call to Action */}
       <div className="mt-10 rounded-lg border bg-muted/50 p-5">
         <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
@@ -233,26 +175,28 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       </div>
 
       {/* Related blogs */}
-      <section className="mt-10">
-        <h2 className="text-lg font-semibold text-black dark:text-white">Related blogs</h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
-          {related.map((r) => (
-            <Link key={r.slug} href={`/blog/${r.slug}`} className="group">
-              <Card className="h-full bg-white dark:bg-muted border transition-shadow hover:shadow-md">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base group-hover:underline underline-offset-4 text-black dark:text-white">
-                    {r.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <p className="text-xs text-muted-foreground leading-relaxed">{r.excerpt}</p>
-                  <span className="text-xs font-medium text-foreground">Read More →</span>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {related.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-lg font-semibold text-black dark:text-white">Related blogs</h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            {related.map((r) => (
+              <Link key={r.slug} href={`/blog/${r.slug}`} className="group">
+                <Card className="h-full bg-white dark:bg-muted border transition-shadow hover:shadow-md">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base group-hover:underline underline-offset-4 text-black dark:text-white">
+                      {r.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <p className="text-xs text-muted-foreground leading-relaxed">{r.excerpt}</p>
+                    <span className="text-xs font-medium text-foreground">Read More →</span>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Floating CTA */}
       <Link
