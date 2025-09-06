@@ -12,23 +12,63 @@ type Post = {
   title: string
   description: string
   keywords?: string[]
-  content: React.ReactNode
+  coverImage?: string
+  author?: string
+  date?: string
+  readingTime?: string
+  content: { type: string; text: string }[]
 }
 
 function getImageUrl(meta?: { coverImage?: string }, siteUrl?: string) {
   const baseUrl =
     siteUrl || process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
   const img = meta?.coverImage
-
   if (!img) return `${baseUrl}/opengraph-image.png`
   return img.startsWith("http") ? img : `${baseUrl}${img}`
+}
+
+function RenderContent({ content }: { content: { type: string; text: string }[] }) {
+  return (
+    <>
+      {content.map((block, i) => {
+        if (block.type === "h2") {
+          return (
+            <h2
+              key={i}
+              className="mt-10 text-2xl font-semibold tracking-tight text-black dark:text-white"
+            >
+              {block.text}
+            </h2>
+          )
+        }
+        if (block.type === "p") {
+          return (
+            <p key={i} className="mt-4 text-base leading-relaxed text-muted-foreground">
+              {block.text}
+            </p>
+          )
+        }
+        if (block.type === "h3") {
+          return (
+            <h3
+              key={i}
+              className="mt-8 text-xl font-semibold tracking-tight text-black dark:text-white"
+            >
+              {block.text}
+            </h3>
+          )
+        }
+        return null
+      })}
+    </>
+  )
 }
 
 export async function generateMetadata(
   { params }: { params: { slug: string } },
   _parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const post = POSTS[params.slug]
+  const post = POSTS[params.slug] as Post | undefined
   if (!post) {
     return {
       title: "Blog",
@@ -65,7 +105,7 @@ export async function generateMetadata(
 }
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = POSTS[params.slug]
+  const post = POSTS[params.slug] as Post | undefined
 
   if (!post) {
     return (
@@ -106,7 +146,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     mainEntityOfPage: postUrl,
     datePublished: meta?.date,
     dateModified: meta?.date,
-    author: meta?.author ? { "@type": "Person", name: meta.author } : undefined,
+    author: post.author ? { "@type": "Person", name: post.author } : undefined,
     publisher: {
       "@type": "Organization",
       name: "FeedLooply",
@@ -142,10 +182,28 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           {post.title}
         </h1>
         <p className="mt-3 text-muted-foreground">{post.description}</p>
+
+        {/* Blog Cover Image */}
+        {post.coverImage && (
+          <img
+            src={imageUrl}
+            alt={post.title}
+            className="mt-6 w-full rounded-lg border bg-muted/20 object-cover"
+            onError={(e) => (e.currentTarget.src = "/opengraph-image.png")}
+          />
+        )}
+
+        <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+          {post.author && <span>✍️ {post.author}</span>}
+          {post.date && <span>📅 {post.date}</span>}
+          {post.readingTime && <span>⏱ {post.readingTime}</span>}
+        </div>
       </header>
 
-      {post.content}
+      {/* Render blog content */}
+      <RenderContent content={post.content} />
 
+      {/* Subscribe box */}
       <section className="mt-10 rounded-lg border bg-muted/30 p-5">
         <h2 className="text-lg font-semibold">Get new posts in your inbox</h2>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -156,6 +214,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         </div>
       </section>
 
+      {/* Call to action */}
       <div className="mt-10 rounded-lg border bg-muted/50 p-5">
         <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
@@ -173,6 +232,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         </div>
       </div>
 
+      {/* Related blogs */}
       <section className="mt-10">
         <h2 className="text-lg font-semibold text-black dark:text-white">Related blogs</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
@@ -194,6 +254,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         </div>
       </section>
 
+      {/* Floating CTA */}
       <Link
         href="/#pricing"
         className="fixed bottom-5 right-5 inline-flex items-center rounded-full bg-secondary px-5 py-3 text-sm font-medium text-secondary-foreground shadow-lg hover:opacity-90"
