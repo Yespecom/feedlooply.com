@@ -135,15 +135,18 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
 {meta?.coverImage ? (
   <img
     src={meta.coverImage}
-    alt={post.title}
+    alt={post.title} // already SEO friendly
+    title={post.title} // improves image search relevance
     className="
       mt-4 
       w-full max-h-80 rounded-lg border shadow-sm object-cover
       md:mx-auto md:max-w-md
     "
     loading="lazy"
+    decoding="async"
   />
 ) : null}
+
 
 
 
