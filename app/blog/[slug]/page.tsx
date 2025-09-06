@@ -15,6 +15,15 @@ type Post = {
   content: React.ReactNode
 }
 
+function getImageUrl(meta?: { coverImage?: string }, siteUrl?: string) {
+  const baseUrl =
+    siteUrl || process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
+  const img = meta?.coverImage
+
+  if (!img) return `${baseUrl}/opengraph-image.png`
+  return img.startsWith("http") ? img : `${baseUrl}${img}`
+}
+
 export async function generateMetadata(
   { params }: { params: { slug: string } },
   _parent: ResolvingMetadata,
@@ -29,7 +38,7 @@ export async function generateMetadata(
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
   const meta = BLOGS_META.find((b) => b.slug === params.slug)
-  const imageUrl = `${siteUrl}${meta?.coverImage || "/opengraph-image.png"}`
+  const imageUrl = getImageUrl(meta, siteUrl)
   const mergedKeywords = Array.from(
     new Set<string>([...(post.keywords || []), ...(meta?.tags || []), ...SITE_KEYWORDS]),
   )
@@ -61,10 +70,15 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   if (!post) {
     return (
       <main className="mx-auto w-full max-w-3xl px-4 py-10 md:py-16">
-        <h1 className="text-balance text-2xl md:text-3xl font-semibold tracking-tight">Post not found</h1>
+        <h1 className="text-balance text-2xl md:text-3xl font-semibold tracking-tight">
+          Post not found
+        </h1>
         <p className="mt-2 text-muted-foreground">
           The article you’re looking for doesn’t exist yet. Explore other posts on the{" "}
-          <Link href="/blog" className="underline decoration-primary underline-offset-4 hover:opacity-90">
+          <Link
+            href="/blog"
+            className="underline decoration-primary underline-offset-4 hover:opacity-90"
+          >
             blog
           </Link>
           .
@@ -78,7 +92,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000"
   const meta = BLOGS_META.find((b) => b.slug === params.slug)
   const postUrl = `${siteUrl}/blog/${params.slug}`
-  const imageUrl = `${siteUrl}${meta?.coverImage || "/opengraph-image.png"}`
+  const imageUrl = getImageUrl(meta, siteUrl)
   const mergedKeywords = Array.from(
     new Set<string>([...(post.keywords || []), ...(meta?.tags || []), ...SITE_KEYWORDS]),
   )
@@ -107,7 +121,10 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-10 md:py-16">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mb-4 flex items-center justify-between">
         <Link
           href="/blog"
@@ -121,7 +138,9 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       </div>
 
       <header className="mb-6">
-        <h1 className="text-balance text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
+        <h1 className="text-balance text-3xl md:text-4xl font-semibold tracking-tight">
+          {post.title}
+        </h1>
         <p className="mt-3 text-muted-foreground">{post.description}</p>
       </header>
 
