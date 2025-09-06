@@ -181,7 +181,7 @@ export const BLOGS: Blog[] = [
     date: "2025-09-06",
     readingTime: "12 min",
     tags: ["founder story", "startup journey", "feedback tools", "entrepreneurship"],
-    coverImage: "/founder-srinithin-somasundaram-feedlooply.jpg",
+    coverImage: "/srinithin.png",
     content: [
       {
         type: "p",
