@@ -121,6 +121,18 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       </div>
 
       <header className="mb-6">
+        {meta?.coverImage && !meta.coverImage.includes("placeholder") && (
+          <div className="mb-6 overflow-hidden rounded-lg">
+            <img
+              src={meta.coverImage || "/placeholder.svg"}
+              alt={post.title}
+              className="h-64 w-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = "none"
+              }}
+            />
+          </div>
+        )}
         <h1 className="text-balance text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
         <p className="mt-3 text-muted-foreground">{post.description}</p>
       </header>
