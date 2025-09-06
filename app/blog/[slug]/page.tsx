@@ -131,6 +131,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       {/* Title + Description */}
       <header className="mb-6">
         <h1 className="text-balance text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
+        <p className="mt-3 text-muted-foreground">{post.description}</p>
 {meta?.coverImage ? (
   <img
     src={meta.coverImage}
@@ -141,7 +142,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
 ) : null}
 
 
-        <p className="mt-3 text-muted-foreground">{post.description}</p>
+        
       </header>
 
       {/* ✅ Safe render of content */}
