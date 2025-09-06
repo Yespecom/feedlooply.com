@@ -136,10 +136,15 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   <img
     src={meta.coverImage}
     alt={post.title}
-    className="mt-4 w-full max-h-80 rounded-lg border shadow-sm object-cover"
+    className="
+      mt-4 
+      w-full max-h-80 rounded-lg border shadow-sm object-cover
+      md:mx-auto md:max-w-md
+    "
     loading="lazy"
   />
 ) : null}
+
 
 
 
