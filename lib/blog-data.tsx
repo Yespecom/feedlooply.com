@@ -268,7 +268,7 @@ export const BLOGS: Blog[] = [
     date: "2025-09-06",
     readingTime: "15 min",
     tags: ["AI", "product management", "feedback analysis", "machine learning", "advanced techniques"],
-    coverImage: "/ai-feedback-analysis-advanced-techniques.jpg",
+    // coverImage: "/ai-feedback-analysis-advanced-techniques.jpg",
     content: [
       {
         type: "p",
@@ -469,7 +469,7 @@ export const BLOGS: Blog[] = [
     date: "2025-05-18",
     readingTime: "8 min",
     tags: ["feedback", "product", "early-stage", "process"],
-    coverImage: "/team-meeting-startup-product-discussion.png",
+    // coverImage: "/team-meeting-startup-product-discussion.png",
     content: [
       {
         type: "p",
