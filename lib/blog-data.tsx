@@ -173,6 +173,294 @@ function renderContent(blocks: Blog["content"], ensureMinWords = 1000): React.Re
 
 export const BLOGS: Blog[] = [
   {
+    slug: "meet-our-founder",
+    title: "Meet Our Founder: Srinithin Somasundaram's Journey to Building Feedlooply",
+    excerpt:
+      "From YESP Tech to Feedlooply—discover the story behind our founder's mission to make feedback loops accessible to every startup.",
+    author: "Srinithin Somasundaram",
+    date: "2025-09-06",
+    readingTime: "12 min",
+    tags: ["founder story", "startup journey", "feedback tools", "entrepreneurship"],
+    coverImage: "/founder-srinithin-somasundaram-feedlooply.jpg",
+    content: [
+      {
+        type: "p",
+        text: "Hi, I'm Srinithin Somasundaram, the founder of Feedlooply. Today, I want to share the story behind why I built this platform and how my journey led me to focus on solving one of the most overlooked problems in product development: turning scattered feedback into actionable insights.",
+      },
+      { type: "h2", text: "The Problem That Started It All" },
+      {
+        type: "p",
+        text: "Like many founders, my path to building Feedlooply wasn't linear. It started with a frustration I experienced repeatedly across different projects and teams: we were drowning in feedback but starving for clarity.",
+      },
+      {
+        type: "p",
+        text: "Whether it was user comments scattered across Slack threads, support tickets buried in different tools, or insights from customer calls that lived only in someone's notes, the pattern was always the same. We had the signals—we just couldn't see the forest for the trees.",
+      },
+      { type: "h2", text: "My Background: From YESP Tech to Product Obsession" },
+      {
+        type: "p",
+        text: "Before Feedlooply, I founded YESP Tech, where I learned firsthand how critical it is to listen to users—and how hard it can be to do it systematically. At YESP Tech, we built solutions for businesses, but I kept running into the same challenge: teams knew they needed to collect feedback, but they struggled to turn that feedback into confident product decisions.",
+      },
+      {
+        type: "p",
+        text: "I watched talented teams make reactive choices based on the loudest voice in the room, rather than the strongest signal in the data. I saw promising products stagnate because feedback was treated as noise rather than navigation. That's when I realized the problem wasn't just about collecting feedback—it was about creating systems that turn feedback into compounding product value.",
+      },
+      { type: "h2", text: "The 'Aha' Moment" },
+      {
+        type: "p",
+        text: "The breakthrough came during a particularly chaotic product review at YESP Tech. We had feedback from five different channels, three competing priorities from different stakeholders, and a team that was genuinely trying to do the right thing—but we had no systematic way to weigh the evidence.",
+      },
+      {
+        type: "p",
+        text: "That's when I realized: most teams don't fail because they ignore users. They fail because they can't efficiently process user signals into clear, confident decisions. The tools existed to collect feedback, but the tools to analyze, prioritize, and act on feedback were either too expensive, too complex, or simply didn't exist.",
+      },
+      { type: "h2", text: "Why Feedlooply?" },
+      {
+        type: "p",
+        text: "I started building Feedlooply because I believe every startup deserves access to the same feedback intelligence that larger companies take for granted. Too many great products die not because they lack potential, but because their teams can't see the patterns in their user feedback clearly enough to make confident bets.",
+      },
+      {
+        type: "p",
+        text: "Feedlooply is designed to solve three core problems:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Scattered signals: Feedback lives everywhere—Slack, support tickets, calls, emails. We centralize it.",
+          "Analysis paralysis: Raw feedback is overwhelming. We use AI to find patterns and themes.",
+          "Broken loops: Users share feedback but rarely see outcomes. We help you close the loop visibly.",
+        ],
+      },
+      { type: "h2", text: "The Vision: Feedback Loops for Everyone" },
+      {
+        type: "p",
+        text: "My vision for Feedlooply is simple: make systematic feedback analysis accessible to every team, regardless of size or budget. I want the solo founder building their first product to have the same clarity about user needs as a Series B startup with dedicated user research teams.",
+      },
+      {
+        type: "p",
+        text: "This isn't just about building another feedback tool. It's about democratizing the ability to listen systematically, analyze intelligently, and act confidently on user signals.",
+      },
+      { type: "h2", text: "What's Next" },
+      {
+        type: "p",
+        text: "We're just getting started. Feedlooply is launching with Early Access pricing that makes it accessible to indie hackers and early-stage teams—the people who need it most but often can't afford enterprise solutions.",
+      },
+      {
+        type: "p",
+        text: "I'm building this for founders like me who believe that listening to users shouldn't be a luxury. It should be a superpower that every team can afford and every product can benefit from.",
+      },
+      {
+        type: "p",
+        text: "If you're tired of scattered feedback and reactive product decisions, I'd love to have you join us. Check out our [Early Access pricing](/#pricing) and see how Feedlooply can help you turn user signals into product clarity.",
+      },
+      {
+        type: "tip",
+        text: "Building in public has taught me that the best products come from systematic listening, not heroic guessing.",
+      },
+    ],
+  },
+  {
+    slug: "ai-feedback-product-decisions-advanced",
+    title: "Using AI to Turn Raw Feedback into Product Decisions (Advanced Techniques)",
+    excerpt:
+      "Go beyond basic sentiment analysis. Learn advanced AI techniques for semantic clustering, topic extraction, and urgency scoring that transform feedback chaos into clear product direction.",
+    author: "Srinithin Somasundaram",
+    date: "2025-09-06",
+    readingTime: "15 min",
+    tags: ["AI", "product management", "feedback analysis", "machine learning", "advanced techniques"],
+    coverImage: "/ai-feedback-analysis-advanced-techniques.jpg",
+    content: [
+      {
+        type: "p",
+        text: "Most teams use AI for feedback analysis like using a Ferrari to deliver pizza—they're barely scratching the surface of what's possible. While basic sentiment analysis and keyword extraction are useful starting points, advanced AI techniques can transform how you understand user needs, predict churn, and prioritize features.",
+      },
+      {
+        type: "p",
+        text: "This guide covers sophisticated approaches that go beyond 'positive/negative' classification to give you genuine competitive advantages in product decision-making.",
+      },
+      { type: "h2", text: "1. Semantic Clustering: Finding Hidden Patterns" },
+      {
+        type: "p",
+        text: "Traditional keyword-based clustering misses the nuance of human language. Users might describe the same problem as 'slow loading,' 'takes forever,' 'performance issues,' or 'app freezes.' Semantic clustering uses embeddings to group feedback by meaning, not just words.",
+      },
+      { type: "h3", text: "Implementation Approach:" },
+      {
+        type: "ul",
+        items: [
+          "Use sentence transformers (like all-MiniLM-L6-v2) to convert feedback into vector embeddings",
+          "Apply HDBSCAN clustering to identify natural groupings",
+          "Generate cluster summaries using GPT-4 to understand what each group represents",
+          "Track cluster evolution over time to spot emerging themes",
+        ],
+      },
+      {
+        type: "p",
+        text: "This reveals patterns invisible to manual analysis. You might discover that 'onboarding confusion' and 'feature discovery issues' are actually the same underlying problem manifesting at different user journey stages.",
+      },
+      { type: "h2", text: "2. Topic Extraction with Contextual Understanding" },
+      {
+        type: "p",
+        text: "Basic topic modeling (like LDA) treats documents as bags of words. Modern approaches use transformer models that understand context, relationships, and implicit meaning.",
+      },
+      { type: "h3", text: "Advanced Techniques:" },
+      {
+        type: "ul",
+        items: [
+          "BERTopic for dynamic topic modeling that adapts to your domain",
+          "Aspect-based sentiment analysis to understand sentiment toward specific features",
+          "Named entity recognition to identify specific UI elements, workflows, or integrations",
+          "Temporal topic analysis to track how concerns evolve",
+        ],
+      },
+      {
+        type: "p",
+        text: "Instead of generic topics like 'UI' or 'performance,' you get specific insights like 'dashboard loading speed affects morning workflow efficiency' or 'mobile notification timing disrupts focus sessions.'",
+      },
+      { type: "h2", text: "3. Urgency and Impact Scoring" },
+      {
+        type: "p",
+        text: "Not all feedback is created equal. Advanced AI can help you automatically score feedback for urgency, business impact, and implementation complexity.",
+      },
+      { type: "h3", text: "Multi-Factor Scoring Model:" },
+      {
+        type: "ul",
+        items: [
+          "Urgency indicators: Language patterns that suggest blocking issues vs. nice-to-haves",
+          "User value signals: References to workflows, time savings, or business outcomes",
+          "Churn risk markers: Frustration escalation patterns and competitive mentions",
+          "Implementation complexity: Technical feasibility based on feature descriptions",
+        ],
+      },
+      {
+        type: "p",
+        text: "Train models on your historical data to learn what language patterns correlate with high-impact features and urgent fixes in your specific domain.",
+      },
+      { type: "h2", text: "4. Predictive Churn Analysis" },
+      {
+        type: "p",
+        text: "Advanced feedback analysis can predict which users are likely to churn based on the language patterns, sentiment trajectories, and issue types they report.",
+      },
+      { type: "h3", text: "Key Signals:" },
+      {
+        type: "ul",
+        items: [
+          "Sentiment degradation over time (positive → neutral → negative)",
+          "Increasing mention of competitors or alternatives",
+          "Shift from feature requests to fundamental workflow complaints",
+          "Decreased engagement with your responses to their feedback",
+        ],
+      },
+      {
+        type: "p",
+        text: "This enables proactive intervention—reaching out to at-risk users before they decide to leave.",
+      },
+      { type: "h2", text: "5. Feature Request Intelligence" },
+      {
+        type: "p",
+        text: "Transform vague feature requests into specific, actionable requirements using AI-powered analysis.",
+      },
+      { type: "h3", text: "Techniques:" },
+      {
+        type: "ul",
+        items: [
+          "Job-to-be-done extraction: What outcome is the user trying to achieve?",
+          "Workflow context analysis: Where does this fit in their current process?",
+          "Success criteria identification: How would they measure if this solved their problem?",
+          "Alternative solution mapping: What workarounds are they currently using?",
+        ],
+      },
+      {
+        type: "p",
+        text: "Instead of 'add export feature,' you get 'users need to share filtered data with stakeholders who don't have system access, currently using screenshots which lose detail and context.'",
+      },
+      { type: "h2", text: "6. Cross-Channel Signal Correlation" },
+      {
+        type: "p",
+        text: "Advanced AI can correlate feedback patterns across different channels to provide a complete picture of user sentiment and needs.",
+      },
+      { type: "h3", text: "Analysis Dimensions:" },
+      {
+        type: "ul",
+        items: [
+          "Channel-specific language patterns (formal in support tickets, casual in Slack)",
+          "Escalation paths (issue starts in community, moves to support, ends in churn)",
+          "User segment differences (enterprise vs. SMB feedback patterns)",
+          "Temporal correlations (feedback spikes after releases, seasonal patterns)",
+        ],
+      },
+      { type: "h2", text: "7. Automated Competitive Intelligence" },
+      {
+        type: "p",
+        text: "Use AI to extract competitive insights from user feedback without explicitly asking about competitors.",
+      },
+      { type: "h3", text: "Techniques:" },
+      {
+        type: "ul",
+        items: [
+          "Implicit comparison detection: 'Unlike other tools...' or 'I wish this worked like...'",
+          "Feature gap identification: Requests that align with known competitor strengths",
+          "Switching cost analysis: What would make users consider alternatives?",
+          "Differentiation opportunities: Unique value props users appreciate",
+        ],
+      },
+      { type: "h2", text: "8. Implementation Strategy" },
+      {
+        type: "p",
+        text: "Start with one advanced technique and build your capabilities incrementally:",
+      },
+      {
+        type: "ol",
+        items: [
+          "Begin with semantic clustering to improve your basic categorization",
+          "Add urgency scoring to improve prioritization decisions",
+          "Implement predictive churn analysis for proactive user success",
+          "Build competitive intelligence capabilities for strategic planning",
+        ],
+      },
+      { type: "h2", text: "9. Measuring Success" },
+      {
+        type: "p",
+        text: "Track the business impact of your advanced AI feedback analysis:",
+      },
+      {
+        type: "ul",
+        items: [
+          "Decision speed: Time from feedback to product decision",
+          "Accuracy: How often AI-prioritized features drive expected outcomes",
+          "Coverage: Percentage of feedback that gets actioned vs. ignored",
+          "User satisfaction: Improvement in feedback loop closure rates",
+        ],
+      },
+      { type: "h2", text: "10. Common Pitfalls to Avoid" },
+      {
+        type: "ul",
+        items: [
+          "Over-engineering: Start simple and add complexity only when it adds clear value",
+          "Black box decisions: Always maintain explainability for product decisions",
+          "Data quality neglect: AI amplifies garbage in, garbage out",
+          "Human replacement: AI should augment human judgment, not replace it",
+        ],
+      },
+      { type: "h2", text: "Conclusion" },
+      {
+        type: "p",
+        text: "Advanced AI techniques can transform feedback from a reactive cost center into a proactive competitive advantage. The key is implementing these techniques systematically, measuring their impact, and continuously refining your approach based on what drives real business outcomes.",
+      },
+      {
+        type: "p",
+        text: "Remember: the goal isn't to build the most sophisticated AI system—it's to make better product decisions faster. Start with the techniques that address your biggest current pain points and expand from there.",
+      },
+      {
+        type: "tip",
+        text: "The most advanced AI technique is useless if it doesn't help you ship better products faster. Always optimize for decision quality, not technical sophistication.",
+      },
+      {
+        type: "p",
+        text: "Want to see these techniques in action? Feedlooply implements many of these advanced approaches out of the box. Check out our [Early Access pricing](/#pricing) to start turning your feedback chaos into product clarity.",
+      },
+    ],
+  },
+  {
     slug: "why-startups-fail-at-feedback",
     title: "Why Startups Fail at Feedback (and How to Fix It)",
     excerpt:
