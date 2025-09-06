@@ -131,14 +131,15 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       {/* Title + Description */}
       <header className="mb-6">
         <h1 className="text-balance text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
-     {meta?.coverImage && (
+{meta?.coverImage && (
   <img
     src={meta.coverImage}
     alt={post.title}
-    className="mt-4 max-h-80 w-full rounded-lg border shadow-sm object-cover"
+    className="mt-4 mx-auto max-w-md rounded-lg border shadow-sm object-cover"
     loading="lazy"
   />
 )}
+
 
         <p className="mt-3 text-muted-foreground">{post.description}</p>
       </header>
